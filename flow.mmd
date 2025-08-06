@@ -1,0 +1,49 @@
+---
+config:
+  layout: dagre
+---
+flowchart TD
+ subgraph MD["Master Data Layer"]
+        IM["📦 Items_Master<br>SKU_ID | Description<br>Unit_Cost | ABC_Class"]
+        WH["🏭 Warehouses<br>Location_ID | Currency<br>Time_Zone"]
+        SUP["👥 Suppliers<br>Supplier_ID | MOQ<br>Lead_Time"]
+  end
+ subgraph OD["Operational Data Layer"]
+        IOH["📊 Inventory_On_Hand<br>Current_Stock | Available<br>Allocated"]
+        DF["📈 Demand_Forecast<br>ML_Prediction | Confidence<br>Seasonality"]
+        PO["📋 Open_POs<br>PO_Number | Expected_Date<br>Quantity"]
+  end
+ subgraph IL["Intelligence Layer"]
+        RR["⚙️ Reorder_Rules<br>Service_Level | Safety_Stock"]
+        DS["🧮 Demand_Statistics<br>Avg_Demand | Std_Dev"]
+        CR["💱 Currency_Rates<br>Exchange Rates"]
+  end
+ subgraph CE["Calculation Engine"]
+        ML["🧠 ML Ensemble<br>Prophet | LightGBM | N-HiTS"]
+        CALC["📐 Calculations<br>Position → Target → Order Qty"]
+  end
+    IM --> IOH & RR
+    WH --> IOH & CR
+    SUP --> PO
+    IOH --> CALC
+    PO --> CALC
+    RR --> CALC
+    DS --> ML
+    DF --> ML
+    ML --> CALC
+    CR --> CALC
+     IM:::master
+     WH:::master
+     SUP:::master
+     IOH:::operational
+     DF:::operational
+     PO:::operational
+     RR:::intelligence
+     DS:::intelligence
+     CR:::intelligence
+     ML:::calculation
+     CALC:::calculation
+    classDef master fill:#DBEAFE,stroke:#3B82F6,stroke-width:2px
+    classDef operational fill:#D1FAE5,stroke:#10B981,stroke-width:2px
+    classDef intelligence fill:#FEF3C7,stroke:#F59E0B,stroke-width:2px
+    classDef calculation fill:#E0E7FF,stroke:#6366F1,stroke-width:2px
